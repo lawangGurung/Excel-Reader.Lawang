@@ -38,7 +38,7 @@ public class Database
 
             AnsiConsole.MarkupLine("[green bold]DATABASE CREATED  :bookmark_tabs:[/]");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
@@ -55,9 +55,10 @@ public class Database
                 VALUES(@firstName, @lastName, @gender, @country, @age, @date)
             ";
 
-            for(int i = 0; i < people.Count(); i++)
+            for (int i = 0; i < people.Count(); i++)
             {
-                var value = new {
+                var value = new
+                {
                     @firstName = people[i].FirstName,
                     @lastName = people[i].LastName,
                     @gender = people[i].Gender,
@@ -73,7 +74,43 @@ public class Database
 
 
         }
-        catch(Exception ex)
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    public void CreateDynamicData(List<WorkSheet> workSheets)
+    {
+        try
+        {
+            using var connection = new SQLiteConnection(connectionString);
+            connection.Open();
+            foreach (WorkSheet ws in workSheets)
+            {
+                string createTable = @$"
+                    CREATE TABLE IF NOT EXISTS {ws.Name}(
+                        {string.Join(", ", ws.ColumnHeaders.Select(header => $"{header} TEXT"))} 
+                    ) 
+                ";
+                connection.Execute(createTable);
+
+                string insertTable = @$"
+                        INSERT INTO {ws.Name}
+                        ({string.Join(", ", ws.ColumnHeaders)})
+                        VALUES{string.Join(", ", ws.TableValue)}; 
+                    ";
+
+                connection.Execute(insertTable);
+
+
+            }
+
+            connection.Close();
+            AnsiConsole.MarkupLine("[green bold]DATA SEEDED INTO THE DATABASE  	:books:[/]");
+
+        }
+        catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }

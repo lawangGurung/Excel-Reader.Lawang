@@ -22,6 +22,7 @@ static IHostBuilder CreateDefaultHostBuilder(string[] args)
         services.AddSingleton<App>();
         services.AddSingleton<Database>();
         services.AddSingleton<ExcelOperator>();
+        services.AddSingleton<FileReader>();
     });
 }
 
