@@ -80,6 +80,25 @@ public class Database
         }
     }
 
+    public async Task<List<Person>> GetAllData()
+    {
+        try
+        {
+            using var connection = new SQLiteConnection(connectionString);
+            string getAllQuery = @"
+                SELECT * FROM People; 
+            ";
+
+            var result = await connection.QueryAsync<Person>(getAllQuery);
+            return result.ToList();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        return new List<Person>();
+    }
     public void CreateDynamicData(List<WorkSheet> workSheets)
     {
         try

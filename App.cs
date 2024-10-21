@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Excel_Reader.Lawang;
 using Excel_Reader.Lawang.Data;
 using Excel_Reader.Lawang.Model;
@@ -57,6 +58,9 @@ internal class App
                 await _db.InsertData(peopleList);
             });
 
+            var listOfPerson = await _db.GetAllData();
+
+            View.DisplayKnownExcel(listOfPerson);
             var confirmation = AnsiConsole.Prompt(
             new ConfirmationPrompt("[royalblue1 bold]\nDo you want to read another files (dynamically)?\n[/]"));
 
@@ -73,7 +77,6 @@ internal class App
         }
 
     }
-
     private void DynamicReader()
     {
         bool exit = false;

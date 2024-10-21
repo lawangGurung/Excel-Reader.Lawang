@@ -1,3 +1,4 @@
+using Excel_Reader.Lawang.Model;
 using Spectre.Console;
 
 namespace Excel_Reader.Lawang;
@@ -38,6 +39,57 @@ public static class View
             AnsiConsole.MarkupLine($"[blue bold]{count}. {name}[/] :page_facing_up:");
             count++;
         }
+    }
+
+    public static void DisplayKnownExcel(List<Person> people)
+    {
+        if (people.Count() == 0)
+        {
+            Panel panel = new Panel(new Markup("[red bold]CONTACT IS EMPTY![/]"))
+                .Border(BoxBorder.Heavy)
+                .BorderColor(Color.IndianRed1_1)
+                .Padding(1, 1, 1, 1)
+                .Header("Result");
+
+            AnsiConsole.Write(panel);
+            return;
+        }
+
+        var table = new Table()
+            .Border(TableBorder.Rounded)
+            .Expand()
+            .BorderColor(Color.Aqua)
+            .ShowRowSeparators();
+
+        table.AddColumns(new TableColumn[]
+        {
+           new TableColumn("[darkgreen bold]Id[/]").Centered(),
+           new TableColumn("[darkcyan bold]First Name [/]").Centered(),
+           new TableColumn("[darkcyan bold]Last Name [/]").Centered(),
+           new TableColumn("[darkcyan bold]Gender[/]").Centered(),
+           new TableColumn("[darkgreen bold]Country[/]").Centered(),
+           new TableColumn("[darkgreen bold]Age[/]").Centered(),
+           new TableColumn("[darkgreen bold]Date[/]").Centered()
+        });
+
+        foreach (var person in people)
+        {
+            table.AddRow(
+                new Markup($"[cyan1]{person.Id}[/]").Centered(),
+                new Markup($"[turquoise2]{person.FirstName}[/]").Centered(),
+                new Markup($"[turquoise2]{person.LastName}[/]").Centered(),
+                new Markup($"[yellow]{person.Gender}[/]").Centered(),
+                new Markup($"[turquoise2]{person.Country}[/]").Centered(),
+                new Markup($"[turquoise2]{person.Age}[/]").Centered(),
+                new Markup($"[turquoise2]{person.Date}[/]").Centered()
+
+            );
+        }
+        Console.WriteLine();
+        var rule = new Rule("[aquamarine1 bold]CREATED DATA FROM KNOWN EXCEL FILE[/]").LeftJustified();
+        AnsiConsole.Write(rule);
+        
+        AnsiConsole.Write(table);
     }
 
      public static void RenderTable(List<string[]> data)
